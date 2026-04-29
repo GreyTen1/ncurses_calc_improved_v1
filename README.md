@@ -1,4 +1,4 @@
-<h2> Calculator written with the ncurses.h library </h2>
+<h2> C Calculator written with the ncurses.h library </h2>
 
 This is a basic calculator that handles basic arimethic operations ( addition, subtraction, multiplication and division)
 
