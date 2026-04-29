@@ -1,11 +1,11 @@
-#define array_size 26
+#define array_size 26 /// apparently, I can't do "const int" for fixed array sizes in C, I have to do it this way
 
 #include <ncurses.h>
 #include <locale.h>
 #include <stdlib.h>
 
 
-void array_display(char charDisplay[])
+void array_display(char charDisplay[]) /// this handles the the array that is shown to the user
 {
     int prev_y, prev_x;
     getyx(stdscr, prev_y, prev_x);
@@ -22,7 +22,7 @@ void array_display(char charDisplay[])
     refresh();
 }
 
-void calculator_display(char charDisplay[])
+void calculator_display(char charDisplay[]) /// the calculator we'll be moving around on
 {
     printw("╔══════════════════════════════╗\n");
     printw("║                              ║        PRESS TAB FOR EXTRA OPTIONS:\n");
@@ -36,12 +36,12 @@ void calculator_display(char charDisplay[])
     printw("║                              ║\n");
     printw("║              0               ║\n");
     printw("║                              ║\n");
-    printw("║  +      -    =    *       /  ║        PRESS CTRL + C TO EXIT\n");
+    printw("║  +      -    =    *       /  ║        PRESS 'ESC' TO EXIT\n");
     printw("╚══════════════════════════════╝\n");
 
 }
 
-bool valid_pos(int ch)
+bool valid_pos(int ch) /// checks if the cursor is on a valid character
 {
 
     if(ch == ' ' || ch == 0x2502 || ch == 0x2550 )
@@ -54,16 +54,16 @@ bool valid_pos(int ch)
     }
 }
 
-void movement(char charDisplay[], size_t size){
+void actions(char charDisplay[], size_t size){ /// it handles key arrows, enter, tab, spacebar, also the whole logic of the program overall (it shouldn't, but whatever)
     int y, x;
-    long long number1, number2, result;
+    long long number1, number2, result;             ///a bunch of variables that are used within this function
     bool flag_number1 = false;
     bool flag_number2 = false;
     char last_operator;
     bool extra_is_on = false;
 
-    getyx(stdscr, y, x);
-    move( 6 , 15 );
+    getyx(stdscr, y, x);    /// gets the current cursor position
+    move( 6 , 15 );         /// it moves the cursor to a specific location
 
     int ch = getch();
 
@@ -72,7 +72,7 @@ void movement(char charDisplay[], size_t size){
         chtype current = inch();
         int c = current & A_CHARTEXT;
 
-        if(ch == KEY_UP && !extra_is_on)
+        if(ch == KEY_UP && !extra_is_on) /// from now on, functions will check if a specific key and the extra flag is on
         {
             if(c == '+' || c == '-' || c == '=' || c == '*' || c == '/')
             {
@@ -85,8 +85,9 @@ void movement(char charDisplay[], size_t size){
                 {
                     getyx(stdscr, y, x);
                     move( y - 1 , x );
-                    current = inch();
-                    c = current & A_CHARTEXT;
+
+                    current = inch();       /// useful function to extract text from the terminal output
+                    c = current & A_CHARTEXT; /// conversion that I have to make bc when you get the character, it also saves its attributes, and I only want the character itself
 
                     if(valid_pos(c))
                     {
@@ -158,10 +159,10 @@ void movement(char charDisplay[], size_t size){
             refresh();
         }
 
-        if(ch == '\n' ||ch == '\r' ||ch == ' ')
+        if(ch == '\n' ||ch == '\r' ||ch == ' ') /// checks if the return/spacebar keys were pressed
         {
 
-            if(c == '+' || c == '-' || c == '*' || c == '/' || c == '=')
+            if(c == '+' || c == '-' || c == '*' || c == '/' || c == '=') /// special keys that do arimethic calculations, equal is also included
             {
                 if(c != '=' && !extra_is_on)
                 {
@@ -170,7 +171,7 @@ void movement(char charDisplay[], size_t size){
 
                 if(!flag_number1)
                 {
-                    number1 = atoll(charDisplay);
+                    number1 = atoll(charDisplay); /// turns the char array into a long long datatype
                     flag_number1 = true;
 
                     for(int i = 0; i < array_size; i++)
@@ -230,7 +231,7 @@ void movement(char charDisplay[], size_t size){
                         {
                             amount++;
                         }
-
+                        /// from line 235 to 259 I straight up lost my grip on reality
                         int array_correction = array_size - amount;
                         int counter = 0;
 
@@ -297,7 +298,7 @@ void movement(char charDisplay[], size_t size){
             array_display(charDisplay);
         }
 
-        if(ch == '\t')
+        if(ch == '\t') /// it's used for switching between normal and extra mode
         {
             current = inch();
             c = current & A_CHARTEXT;
@@ -338,7 +339,7 @@ void movement(char charDisplay[], size_t size){
 }
 
 
-void program()
+void program() /// function that handles the program's execution
 {
     setlocale(LC_ALL, "");
     initscr();
@@ -355,7 +356,7 @@ void program()
     charDisplay[26] = '\0';
 
     calculator_display(charDisplay);
-    movement(charDisplay, sizeof(charDisplay));
+    actions(charDisplay, sizeof(charDisplay));
 
     endwin();
 }
@@ -364,7 +365,7 @@ void program()
 
 int main()
 {
-    program();
+    program(); /// maybe I shouldn't use a function for what "program()" does..
 
 	return 0;
 }
