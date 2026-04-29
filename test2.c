@@ -72,7 +72,7 @@ void actions(char charDisplay[], size_t size){ /// it handles key arrows, enter,
         chtype current = inch();
         int c = current & A_CHARTEXT;
 
-        if(ch == KEY_UP && !extra_is_on) /// from now on, functions will check if a specific key and the extra flag is on
+        if(ch == KEY_UP && !extra_is_on) /// from now on, functions will check if a specific key is pressed and if the extra flag is on
         {
             if(c == '+' || c == '-' || c == '=' || c == '*' || c == '/')
             {
