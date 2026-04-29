@@ -159,6 +159,19 @@ void actions(char charDisplay[], size_t size){ /// it handles key arrows, enter,
             refresh();
         }
 
+        if(ch == '0' || ch == '1' || ch == '2' || ch == '3' || ch == '4' || ch == '5' || ch == '6' || ch == '7' || ch == '8' || ch == '9')
+        {
+            for (int i = 0; i < array_size - 1; i ++)
+            {
+                charDisplay[i] = charDisplay[i + 1];
+            }
+
+            charDisplay[25] = ch;
+
+            array_display(charDisplay);
+            refresh();
+        }
+
         if(ch == '\n' ||ch == '\r' ||ch == ' ') /// checks if the return/spacebar keys were pressed
         {
 
@@ -260,8 +273,6 @@ void actions(char charDisplay[], size_t size){ /// it handles key arrows, enter,
 
                         array_display(charDisplay);
                     }
-
-
             }
             else
             {
